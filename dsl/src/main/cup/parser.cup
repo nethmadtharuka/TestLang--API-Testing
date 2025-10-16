@@ -1,12 +1,21 @@
 package com.testlang;
 
-terminal String WORD;
-non terminal void Start;
+import java_cup.runtime.*;
 
-start with Start;
+// Terminals (tokens from your lexer.l file)
+terminal WORD;
 
-// Minimal grammar: accepts zero or more WORD tokens
-Start ::= /* empty */
-       | WORD Start
-       ;
+// Non-Terminals (grammar rule names)
+// Notice there is NO type here. It will default to Object, which is correct.
+non terminal Start;
 
+// Precedence Declarations (if any)
+// none for now
+
+// The Grammar Rules
+Start ::=
+        /* Rule for one or more WORDs */
+        WORD Start
+        |
+        /* Rule for empty input (optional) */
+        ;
