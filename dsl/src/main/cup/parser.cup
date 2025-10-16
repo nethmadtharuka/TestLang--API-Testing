@@ -1,0 +1,12 @@
+package com.testlang;
+
+terminal String WORD;
+non terminal void Start;
+
+start with Start;
+
+// Minimal grammar: accepts zero or more WORD tokens
+Start ::= /* empty */
+       | WORD Start
+       ;
+
