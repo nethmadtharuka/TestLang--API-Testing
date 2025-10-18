@@ -9,13 +9,11 @@ terminal String IDENT, STRING, NUMBER;
 terminal EQ, LBRACE, RBRACE, SEMI;
 
 // Define non-terminals AND the Java object they will return
-// This is the most important change!
 non terminal ProgramNode      program;
 non terminal StatementNode    statement;
 non terminal LetNode          let_decl;
 non terminal TestNode         test_block;
-// We'll add config_block back later
-// non terminal config_block;
+non terminal ConfigNode       config_block;
 
 
 // The grammar rules start here
@@ -45,6 +43,10 @@ statement ::=
         // Pass the TestNode object up
         RESULT = tb;
     :}
+    | config_block:cb
+    {:
+        RESULT = cb;
+    :}
     ;
 
 // Split into TWO separate production rules
@@ -66,4 +68,13 @@ test_block ::= TEST IDENT:name LBRACE RBRACE
     {:
         // JAVA CODE: Create a new TestNode and return it
         RESULT = new TestNode(name);
-    :};
+    :}
+    ;
+
+// This new rule matches: config { base_url = "http://url"; }
+config_block ::= CONFIG LBRACE BASE_URL EQ STRING:url SEMI RBRACE
+    {:
+        // Create a new ConfigNode and return it
+        RESULT = new ConfigNode(url);
+    :}
+    ;

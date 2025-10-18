@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class GeneratedTests {
 
-    static String BASE_URL = "http://localhost:8080";
+    static String BASE_URL = "https://api.example.com";
     static HttpClient client;
 
     @BeforeAll
@@ -20,8 +20,8 @@ public class GeneratedTests {
     }
 
     @Test
-    void test_LoginUser() throws Exception {
-        System.out.println("Running test: LoginUser");
+    void test_MyConfigTest() throws Exception {
+        System.out.println("Running test: MyConfigTest");
         assertTrue(true);
     }
 

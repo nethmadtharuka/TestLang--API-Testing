@@ -1,4 +1,9 @@
+// This URL will override the default "localhost:8080"
+config {
+    base_url = "https://api.example.com";
+}
+
 let user = "admin";
 
-test LoginUser {
+test MyConfigTest {
 }

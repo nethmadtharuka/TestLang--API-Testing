@@ -31,9 +31,10 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\010\000\002\002\004\000\002\002\004\000\002\002" +
-    "\002\000\002\003\003\000\002\003\003\000\002\004\007" +
-    "\000\002\004\007\000\002\005\006" });
+    "\000\012\000\002\002\004\000\002\002\004\000\002\002" +
+    "\002\000\002\003\003\000\002\003\003\000\002\003\003" +
+    "\000\002\004\007\000\002\004\007\000\002\005\006\000" +
+    "\002\006\011" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -41,17 +42,23 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\021\000\010\002\uffff\005\uffff\006\uffff\001\002\000" +
-    "\010\002\012\005\005\006\006\001\002\000\004\021\016" +
-    "\001\002\000\004\021\013\001\002\000\010\002\ufffd\005" +
-    "\ufffd\006\ufffd\001\002\000\010\002\001\005\001\006\001" +
-    "\001\002\000\010\002\ufffe\005\ufffe\006\ufffe\001\002\000" +
-    "\004\002\000\001\002\000\004\025\014\001\002\000\004" +
-    "\026\015\001\002\000\010\002\ufffa\005\ufffa\006\ufffa\001" +
-    "\002\000\004\024\017\001\002\000\006\022\020\023\021" +
-    "\001\002\000\004\027\023\001\002\000\004\027\022\001" +
-    "\002\000\010\002\ufffb\005\ufffb\006\ufffb\001\002\000\010" +
-    "\002\ufffc\005\ufffc\006\ufffc\001\002" });
+    "\000\031\000\012\002\uffff\004\uffff\005\uffff\006\uffff\001" +
+    "\002\000\012\002\014\004\005\005\006\006\007\001\002" +
+    "\000\004\025\026\001\002\000\004\021\020\001\002\000" +
+    "\004\021\015\001\002\000\012\002\ufffd\004\ufffd\005\ufffd" +
+    "\006\ufffd\001\002\000\012\002\001\004\001\005\001\006" +
+    "\001\001\002\000\012\002\ufffe\004\ufffe\005\ufffe\006\ufffe" +
+    "\001\002\000\012\002\ufffc\004\ufffc\005\ufffc\006\ufffc\001" +
+    "\002\000\004\002\000\001\002\000\004\025\016\001\002" +
+    "\000\004\026\017\001\002\000\012\002\ufff9\004\ufff9\005" +
+    "\ufff9\006\ufff9\001\002\000\004\024\021\001\002\000\006" +
+    "\022\022\023\023\001\002\000\004\027\025\001\002\000" +
+    "\004\027\024\001\002\000\012\002\ufffa\004\ufffa\005\ufffa" +
+    "\006\ufffa\001\002\000\012\002\ufffb\004\ufffb\005\ufffb\006" +
+    "\ufffb\001\002\000\004\020\027\001\002\000\004\024\030" +
+    "\001\002\000\004\022\031\001\002\000\004\027\032\001" +
+    "\002\000\004\026\033\001\002\000\012\002\ufff8\004\ufff8" +
+    "\005\ufff8\006\ufff8\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -59,13 +66,15 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\021\000\004\002\003\001\001\000\010\003\007\004" +
-    "\010\005\006\001\001\000\002\001\001\000\002\001\001" +
+    "\000\031\000\004\002\003\001\001\000\012\003\010\004" +
+    "\011\005\007\006\012\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "" });
+    "\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -203,7 +212,21 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // let_decl ::= LET IDENT EQ STRING SEMI 
+          case 5: // statement ::= config_block 
+            {
+              StatementNode RESULT =null;
+		int cbleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int cbright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		ConfigNode cb = (ConfigNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+        RESULT = cb;
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // let_decl ::= LET IDENT EQ STRING SEMI 
             {
               LetNode RESULT =null;
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
@@ -221,7 +244,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // let_decl ::= LET IDENT EQ NUMBER SEMI 
+          case 7: // let_decl ::= LET IDENT EQ NUMBER SEMI 
             {
               LetNode RESULT =null;
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
@@ -239,7 +262,7 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // test_block ::= TEST IDENT LBRACE RBRACE 
+          case 8: // test_block ::= TEST IDENT LBRACE RBRACE 
             {
               TestNode RESULT =null;
 		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
@@ -250,6 +273,21 @@ class CUP$parser$actions {
         RESULT = new TestNode(name);
     
               CUP$parser$result = parser.getSymbolFactory().newSymbol("test_block",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 9: // config_block ::= CONFIG LBRACE BASE_URL EQ STRING SEMI RBRACE 
+            {
+              ConfigNode RESULT =null;
+		int urlleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int urlright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		String url = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		
+        // Create a new ConfigNode and return it
+        RESULT = new ConfigNode(url);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("config_block",4, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-6)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 

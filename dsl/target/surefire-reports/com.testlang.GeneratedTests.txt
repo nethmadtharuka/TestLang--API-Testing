@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.testlang.GeneratedTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.261 s -- in com.testlang.GeneratedTests
