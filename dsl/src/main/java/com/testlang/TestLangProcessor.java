@@ -1,9 +1,8 @@
 package com.testlang;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-// Import the ProgramNode class you created
-import com.testlang.ProgramNode;
 
 public class TestLangProcessor {
 
@@ -16,37 +15,38 @@ public class TestLangProcessor {
         String inputFile = args[0];
 
         try {
+            // --- 1. PARSE THE FILE ---
             FileReader reader = new FileReader(inputFile);
             TestLangScanner scanner = new TestLangScanner(reader);
-            // NOTE: By Java convention, class names should be uppercase (Parser)
-            // But we will use the lowercase name 'parser' that CUP generated
             parser parser = new parser(scanner);
-
             System.out.println("Parsing file: " + inputFile);
-            System.out.println("Starting parse...");
-
-            // --- KEY CHANGE HERE ---
-            // 1. Call parser.parse() and get its 'value' field.
-            // 2. Cast the returned Object into your ProgramNode class.
             ProgramNode astRoot = (ProgramNode) parser.parse().value;
-
-            // --- UPDATED SUCCESS MESSAGE ---
-            // Check if the AST root was successfully created
-            if (astRoot != null) {
-                System.out.println("Parsing successful!");
-                // 3. Print how many statements it found.
-                System.out.println("Found " + astRoot.getStatements().size() + " statements.");
-            } else {
-                System.out.println("Parsing failed to produce an AST.");
-            }
-
             reader.close();
 
+            if (astRoot == null) {
+                System.err.println("Parsing failed to produce an AST.");
+                System.exit(1);
+            }
+            System.out.println("Parsing successful! Found " + astRoot.getStatements().size() + " statements.");
+
+            // --- 2. GENERATE THE CODE ---
+            CodeGenerator generator = new CodeGenerator();
+            String javaCode = generator.generate(astRoot);
+            System.out.println("Code generation complete.");
+
+            // --- 3. SAVE THE FILE ---
+            String outputFilePath = "src/test/java/com/testlang/GeneratedTests.java";
+            try (FileWriter writer = new FileWriter(outputFilePath)) {
+                writer.write(javaCode);
+            }
+            System.out.println("SUCCESS: GeneratedTests.java was created!");
+            System.out.println("You can now run 'mvn clean test' to execute it.");
+
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+            System.err.println("Error reading or writing file: " + e.getMessage());
             System.exit(1);
         } catch (Exception e) {
-            System.err.println("Parse error: " + e.getMessage());
+            System.err.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
             System.exit(1);
         }
