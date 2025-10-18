@@ -1,21 +1,69 @@
 package com.testlang;
 
 import java_cup.runtime.*;
+// Import all of our new AST node classes
 
-// Terminals (tokens from your lexer.l file)
-terminal WORD;
+// Define terminals (tokens from the lexer)
+terminal CONFIG, LET, TEST, GET, POST, PUT, DELETE, EXPECT, STATUS, HEADER, BODY, CONTAINS, BASE_URL;
+terminal String IDENT, STRING, NUMBER;
+terminal EQ, LBRACE, RBRACE, SEMI;
 
-// Non-Terminals (grammar rule names)
-// Notice there is NO type here. It will default to Object, which is correct.
-non terminal Start;
+// Define non-terminals AND the Java object they will return
+// This is the most important change!
+non terminal ProgramNode      program;
+non terminal StatementNode    statement;
+non terminal LetNode          let_decl;
+non terminal TestNode         test_block;
+// We'll add config_block back later
+// non terminal config_block;
 
-// Precedence Declarations (if any)
-// none for now
 
-// The Grammar Rules
-Start ::=
-        /* Rule for one or more WORDs */
-        WORD Start
-        |
-        /* Rule for empty input (optional) */
-        ;
+// The grammar rules start here
+program ::=
+    program:p statement:s
+    {:
+        // JAVA CODE: Add the statement to the program's list
+        p.addStatement(s);
+        RESULT = p;
+    :}
+    |
+    /* empty */
+    {:
+        // JAVA CODE: Create a new, empty ProgramNode
+        RESULT = new ProgramNode();
+    :}
+    ;
+
+statement ::=
+    let_decl:ld
+    {:
+        // Pass the LetNode object up
+        RESULT = ld;
+    :}
+    | test_block:tb
+    {:
+        // Pass the TestNode object up
+        RESULT = tb;
+    :}
+    ;
+
+// Split into TWO separate production rules
+let_decl ::=
+    LET IDENT:name EQ STRING:val SEMI
+    {:
+        // JAVA CODE: Create a new LetNode and return it
+        RESULT = new LetNode(name, val);
+    :}
+    |
+    LET IDENT:name EQ NUMBER:val SEMI
+    {:
+        // JAVA CODE: Create a new LetNode and return it
+        RESULT = new LetNode(name, val);
+    :}
+    ;
+
+test_block ::= TEST IDENT:name LBRACE RBRACE
+    {:
+        // JAVA CODE: Create a new TestNode and return it
+        RESULT = new TestNode(name);
+    :};

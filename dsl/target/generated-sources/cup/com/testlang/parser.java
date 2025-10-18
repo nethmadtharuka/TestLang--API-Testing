@@ -31,8 +31,9 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\003\000\002\002\004\000\002\002\004\000\002\002" +
-    "\002" });
+    "\000\010\000\002\002\004\000\002\002\004\000\002\002" +
+    "\002\000\002\003\003\000\002\003\003\000\002\004\007" +
+    "\000\002\004\007\000\002\005\006" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -40,9 +41,17 @@ public class parser extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\005\000\006\002\uffff\004\004\001\002\000\006\002" +
-    "\uffff\004\004\001\002\000\004\002\006\001\002\000\004" +
-    "\002\000\001\002\000\004\002\001\001\002" });
+    "\000\021\000\010\002\uffff\005\uffff\006\uffff\001\002\000" +
+    "\010\002\012\005\005\006\006\001\002\000\004\021\016" +
+    "\001\002\000\004\021\013\001\002\000\010\002\ufffd\005" +
+    "\ufffd\006\ufffd\001\002\000\010\002\001\005\001\006\001" +
+    "\001\002\000\010\002\ufffe\005\ufffe\006\ufffe\001\002\000" +
+    "\004\002\000\001\002\000\004\025\014\001\002\000\004" +
+    "\026\015\001\002\000\010\002\ufffa\005\ufffa\006\ufffa\001" +
+    "\002\000\004\024\017\001\002\000\006\022\020\023\021" +
+    "\001\002\000\004\027\023\001\002\000\004\027\022\001" +
+    "\002\000\010\002\ufffb\005\ufffb\006\ufffb\001\002\000\010" +
+    "\002\ufffc\005\ufffc\006\ufffc\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -50,7 +59,11 @@ public class parser extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\005\000\004\002\004\001\001\000\004\002\006\001" +
+    "\000\021\000\004\002\003\001\001\000\010\003\007\004" +
+    "\010\005\006\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "" });
 
@@ -115,21 +128,31 @@ class CUP$parser$actions {
       switch (CUP$parser$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // Start ::= WORD Start 
+          case 0: // program ::= program statement 
             {
-              Object RESULT =null;
-
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("Start",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+              ProgramNode RESULT =null;
+		int pleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int pright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		ProgramNode p = (ProgramNode)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		StatementNode s = (StatementNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+        // JAVA CODE: Add the statement to the program's list
+        p.addStatement(s);
+        RESULT = p;
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // $START ::= Start EOF 
+          case 1: // $START ::= program EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int start_valright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
-		Object start_val = (Object)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		ProgramNode start_val = (ProgramNode)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
 		RESULT = start_val;
               CUP$parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
@@ -138,11 +161,95 @@ class CUP$parser$actions {
           return CUP$parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // Start ::= 
+          case 2: // program ::= 
             {
-              Object RESULT =null;
+              ProgramNode RESULT =null;
+		
+        // JAVA CODE: Create a new, empty ProgramNode
+        RESULT = new ProgramNode();
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
 
-              CUP$parser$result = parser.getSymbolFactory().newSymbol("Start",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 3: // statement ::= let_decl 
+            {
+              StatementNode RESULT =null;
+		int ldleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int ldright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		LetNode ld = (LetNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+        // Pass the LetNode object up
+        RESULT = ld;
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 4: // statement ::= test_block 
+            {
+              StatementNode RESULT =null;
+		int tbleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
+		int tbright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
+		TestNode tb = (TestNode)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
+		
+        // Pass the TestNode object up
+        RESULT = tb;
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("statement",1, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 5: // let_decl ::= LET IDENT EQ STRING SEMI 
+            {
+              LetNode RESULT =null;
+		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int valleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		String val = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+        // JAVA CODE: Create a new LetNode and return it
+        RESULT = new LetNode(name, val);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("let_decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // let_decl ::= LET IDENT EQ NUMBER SEMI 
+            {
+              LetNode RESULT =null;
+		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).left;
+		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)).right;
+		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-3)).value;
+		int valleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int valright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		String val = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		
+        // JAVA CODE: Create a new LetNode and return it
+        RESULT = new LetNode(name, val);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("let_decl",2, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-4)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
+            }
+          return CUP$parser$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 7: // test_block ::= TEST IDENT LBRACE RBRACE 
+            {
+              TestNode RESULT =null;
+		int nameleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).left;
+		int nameright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)).right;
+		String name = (String)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-2)).value;
+		
+        // JAVA CODE: Create a new TestNode and return it
+        RESULT = new TestNode(name);
+    
+              CUP$parser$result = parser.getSymbolFactory().newSymbol("test_block",3, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-3)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
 

@@ -8,13 +8,51 @@ package com.testlang;
 /** CUP generated interface containing symbol constants. */
 public interface sym {
   /* terminals */
-  public static final int WORD = 2;
-  public static final int error = 1;
+  public static final int POST = 6;
+  public static final int IDENT = 15;
+  public static final int RBRACE = 20;
+  public static final int TEST = 4;
+  public static final int SEMI = 21;
+  public static final int STATUS = 10;
+  public static final int EXPECT = 9;
+  public static final int LBRACE = 19;
+  public static final int PUT = 7;
+  public static final int CONTAINS = 13;
+  public static final int STRING = 16;
+  public static final int NUMBER = 17;
   public static final int EOF = 0;
+  public static final int error = 1;
+  public static final int LET = 3;
+  public static final int EQ = 18;
+  public static final int BODY = 12;
+  public static final int HEADER = 11;
+  public static final int BASE_URL = 14;
+  public static final int DELETE = 8;
+  public static final int CONFIG = 2;
+  public static final int GET = 5;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "WORD"
+  "CONFIG",
+  "LET",
+  "TEST",
+  "GET",
+  "POST",
+  "PUT",
+  "DELETE",
+  "EXPECT",
+  "STATUS",
+  "HEADER",
+  "BODY",
+  "CONTAINS",
+  "BASE_URL",
+  "IDENT",
+  "STRING",
+  "NUMBER",
+  "EQ",
+  "LBRACE",
+  "RBRACE",
+  "SEMI"
   };
 }
 
