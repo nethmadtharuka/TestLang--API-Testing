@@ -5,15 +5,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.net.http.*;
 import java.net.URI;
 import java.time.Duration;
-import java.util.Map;
 
 public class GeneratedTests {
 
-    static String BASE_URL = "http://localhost:8080";
+    static String BASE_URL;
     static HttpClient client;
 
     @BeforeAll
     static void setup() {
+        BASE_URL = "http://localhost:8080";
         client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(5))
             .build();
@@ -21,8 +21,17 @@ public class GeneratedTests {
 
     @Test
     void test_Login() throws Exception {
-        System.out.println("Running test: Login");
-        assertTrue(true);
+        // POST request
+        HttpRequest.Builder requestBuilderresponse1 = HttpRequest.newBuilder()
+            .uri(URI.create(BASE_URL + "/api/login"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString("{ \"username\": \"admin\", \"password\": \"1234\" }"));
+        HttpRequest requestresponse1 = requestBuilderresponse1.build();
+        HttpResponse<String> response1 = client.send(requestresponse1, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response1.statusCode(), "Expected status code 200");
+        assertTrue(response1.headers().firstValue("Content-Type").orElse("").contains("json"), "Expected header 'Content-Type' to contain 'json'");
+        assertTrue(response1.body().contains("\"token\":"), "Expected body to contain '\"token\":'");
     }
 
 }

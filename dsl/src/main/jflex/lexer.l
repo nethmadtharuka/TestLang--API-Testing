@@ -42,11 +42,46 @@ import java_cup.runtime.Symbol;
 "}"         { return symbol(sym.RBRACE); }
 ";"         { return symbol(sym.SEMI); }
 
-/* String literals */
-\"([^\\\"]|\\.)*\"  {
+/* String literals - properly handle escape sequences */
+\"(\\.|[^\\\"])*\"  {
     String str = yytext();
+    // Remove the surrounding quotes
     str = str.substring(1, str.length() - 1);
-    return symbol(sym.STRING, str);
+    // Process escape sequences properly
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < str.length(); i++) {
+        if (str.charAt(i) == '\\' && i + 1 < str.length()) {
+            char next = str.charAt(i + 1);
+            switch (next) {
+                case 'n':
+                    result.append('\n');
+                    i++;
+                    break;
+                case 't':
+                    result.append('\t');
+                    i++;
+                    break;
+                case 'r':
+                    result.append('\r');
+                    i++;
+                    break;
+                case '\\':
+                    result.append('\\');
+                    i++;
+                    break;
+                case '"':
+                    result.append('"');
+                    i++;
+                    break;
+                default:
+                    // Keep the backslash if it's not a recognized escape
+                    result.append(str.charAt(i));
+            }
+        } else {
+            result.append(str.charAt(i));
+        }
+    }
+    return symbol(sym.STRING, result.toString());
 }
 
 /* Numbers */

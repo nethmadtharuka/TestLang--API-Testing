@@ -15,6 +15,22 @@ public class TestLangProcessor {
         String inputFile = args[0];
 
         try {
+            // DEBUG: Print what lexer reads
+            System.out.println("\n=== DEBUG: Token values ===");
+            FileReader debugReader = new FileReader(inputFile);
+            TestLangScanner debugScanner = new TestLangScanner(debugReader);
+            int count = 0;
+            while (count < 25) {
+                java_cup.runtime.Symbol sym = debugScanner.next_token();
+                if (sym.sym == 0) break;
+                if (sym.value != null) {
+                    System.out.println("Token: " + sym.sym + " | Value: [" + sym.value + "]");
+                }
+                count++;
+            }
+            debugReader.close();
+            System.out.println("=== End debug ===\n");
+
             // --- 1. PARSE THE FILE ---
             FileReader reader = new FileReader(inputFile);
             TestLangScanner scanner = new TestLangScanner(reader);

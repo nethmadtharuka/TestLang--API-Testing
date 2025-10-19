@@ -8,15 +8,15 @@ public class ExpectNode implements TestCommandNode {
     // Constructor for 'expect status = 200'
     public ExpectNode(String type, String value1) {
         this.type = type;
-        this.value1 = value1.replace("\"", "");
+        this.value1 = value1; // Keep as-is
         this.value2 = null;
     }
 
     // Constructor for 'expect header "Content-Type" contains "json"'
     public ExpectNode(String type, String value1, String value2) {
         this.type = type;
-        this.value1 = value1.replace("\"", "");
-        this.value2 = value2.replace("\"", "");
+        this.value1 = value1; // Keep as-is
+        this.value2 = value2; // Keep as-is
     }
 
     // Getters for the CodeGenerator

@@ -7,15 +7,11 @@ public class RequestNode implements TestCommandNode {
 
     public RequestNode(String method, String url, String body) {
         this.method = method;
-        this.url = url.replace("\"", ""); // Clean quotes
+        // Don't clean the URL - keep it as-is
+        this.url = url;
 
-        if (body != null) {
-            // Clean quotes and escaped characters from the body
-            this.body = body.replace("\"", "")
-                    .replace("\\\"", "\"");
-        } else {
-            this.body = null;
-        }
+        // Don't clean the body - keep it exactly as received from the parser
+        this.body = body;
     }
 
     // Getters so the CodeGenerator can read this data
