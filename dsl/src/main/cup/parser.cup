@@ -1,7 +1,6 @@
 package com.testlang;
 
 import java_cup.runtime.*;
-// Import all of our new AST node classes
 
 // Define terminals (tokens from the lexer)
 terminal CONFIG, LET, TEST, GET, POST, PUT, DELETE, EXPECT, STATUS, HEADER, BODY, CONTAINS, BASE_URL;
@@ -9,25 +8,26 @@ terminal String IDENT, STRING, NUMBER;
 terminal EQ, LBRACE, RBRACE, SEMI;
 
 // Define non-terminals AND the Java object they will return
-non terminal ProgramNode      program;
-non terminal StatementNode    statement;
-non terminal LetNode          let_decl;
-non terminal TestNode         test_block;
-non terminal ConfigNode       config_block;
-
+non terminal ProgramNode        program;
+non terminal StatementNode      statement;
+non terminal LetNode            let_decl;
+non terminal TestNode           test_block;
+non terminal ConfigNode         config_block;
+non terminal TestNode           test_command_list;
+non terminal TestCommandNode    test_command;
+non terminal RequestNode        request;
+non terminal ExpectNode         expect_stmt;
 
 // The grammar rules start here
 program ::=
     program:p statement:s
     {:
-        // JAVA CODE: Add the statement to the program's list
         p.addStatement(s);
         RESULT = p;
     :}
     |
     /* empty */
     {:
-        // JAVA CODE: Create a new, empty ProgramNode
         RESULT = new ProgramNode();
     :}
     ;
@@ -35,12 +35,10 @@ program ::=
 statement ::=
     let_decl:ld
     {:
-        // Pass the LetNode object up
         RESULT = ld;
     :}
     | test_block:tb
     {:
-        // Pass the TestNode object up
         RESULT = tb;
     :}
     | config_block:cb
@@ -49,32 +47,99 @@ statement ::=
     :}
     ;
 
-// Split into TWO separate production rules
 let_decl ::=
     LET IDENT:name EQ STRING:val SEMI
     {:
-        // JAVA CODE: Create a new LetNode and return it
         RESULT = new LetNode(name, val);
     :}
     |
     LET IDENT:name EQ NUMBER:val SEMI
     {:
-        // JAVA CODE: Create a new LetNode and return it
         RESULT = new LetNode(name, val);
     :}
     ;
 
-test_block ::= TEST IDENT:name LBRACE RBRACE
+test_block ::=
+    TEST IDENT:name LBRACE RBRACE
     {:
-        // JAVA CODE: Create a new TestNode and return it
         RESULT = new TestNode(name);
+    :}
+    |
+    TEST IDENT:name LBRACE test_command_list:t RBRACE
+    {:
+        t.testName = name;
+        RESULT = t;
     :}
     ;
 
-// This new rule matches: config { base_url = "http://url"; }
+test_command_list ::=
+    test_command:cmd
+    {:
+        TestNode t = new TestNode("");
+        t.addCommand(cmd);
+        RESULT = t;
+    :}
+    |
+    test_command_list:t test_command:cmd
+    {:
+        t.addCommand(cmd);
+        RESULT = t;
+    :}
+    ;
+
+test_command ::=
+    request:r
+    {:
+        RESULT = r;
+    :}
+    |
+    expect_stmt:e
+    {:
+        RESULT = e;
+    :}
+    ;
+
+request ::=
+    POST STRING:url STRING:body SEMI
+    {:
+        RESULT = new RequestNode("POST", url, body);
+    :}
+    |
+    GET STRING:url SEMI
+    {:
+        RESULT = new RequestNode("GET", url, null);
+    :}
+    |
+    PUT STRING:url STRING:body SEMI
+    {:
+        RESULT = new RequestNode("PUT", url, body);
+    :}
+    |
+    DELETE STRING:url SEMI
+    {:
+        RESULT = new RequestNode("DELETE", url, null);
+    :}
+    ;
+
+expect_stmt ::=
+    EXPECT STATUS EQ NUMBER:statusCode SEMI
+    {:
+        RESULT = new ExpectNode("status", statusCode);
+    :}
+    |
+    EXPECT HEADER STRING:headerName CONTAINS STRING:value SEMI
+    {:
+        RESULT = new ExpectNode("header", headerName, value);
+    :}
+    |
+    EXPECT BODY CONTAINS STRING:value SEMI
+    {:
+        RESULT = new ExpectNode("body", value);
+    :}
+    ;
+
 config_block ::= CONFIG LBRACE BASE_URL EQ STRING:url SEMI RBRACE
     {:
-        // Create a new ConfigNode and return it
         RESULT = new ConfigNode(url);
     :}
     ;
