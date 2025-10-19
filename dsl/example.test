@@ -1,9 +1,15 @@
-// This URL will override the default "localhost:8080"
 config {
-    base_url = "https://api.example.com";
+    base_url = "http://localhost:8080";
 }
 
 let user = "admin";
 
-test MyConfigTest {
+test Login {
+    post "/api/login" {
+        body = "{ \"username\": \"$user\", \"password\": \"1234\" }";
+    }
+
+    expect status = 200;
+    expect header "Content-Type" contains "json";
+    expect body contains "\"token\":";
 }

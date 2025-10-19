@@ -1,0 +1,14 @@
+com\testlang\parser$CUP$parser$actions.class
+com\testlang\TestCommandNode.class
+com\testlang\StatementNode.class
+com\testlang\ConfigNode.class
+com\testlang\ExpectNode.class
+com\testlang\TestLangScanner.class
+com\testlang\TestLangProcessor.class
+com\testlang\CodeGenerator.class
+com\testlang\TestNode.class
+com\testlang\RequestNode.class
+com\testlang\parser.class
+com\testlang\sym.class
+com\testlang\LetNode.class
+com\testlang\ProgramNode.class

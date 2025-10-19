@@ -13,10 +13,10 @@ non terminal StatementNode      statement;
 non terminal LetNode            let_decl;
 non terminal TestNode           test_block;
 non terminal ConfigNode         config_block;
-non terminal TestNode           test_command_list;
+non terminal java.util.List     test_commands_list;
 non terminal TestCommandNode    test_command;
 non terminal RequestNode        request;
-non terminal ExpectNode         expect_stmt;
+non terminal ExpectNode         assertion;
 
 // The grammar rules start here
 program ::=
@@ -59,82 +59,91 @@ let_decl ::=
     :}
     ;
 
-test_block ::=
-    TEST IDENT:name LBRACE RBRACE
+// Upgraded test_block rule to accept commands
+test_block ::= TEST IDENT:name LBRACE test_commands_list:cmds RBRACE
     {:
-        RESULT = new TestNode(name);
-    :}
-    |
-    TEST IDENT:name LBRACE test_command_list:t RBRACE
-    {:
-        t.testName = name;
-        RESULT = t;
-    :}
-    ;
-
-test_command_list ::=
-    test_command:cmd
-    {:
-        TestNode t = new TestNode("");
-        t.addCommand(cmd);
-        RESULT = t;
-    :}
-    |
-    test_command_list:t test_command:cmd
-    {:
-        t.addCommand(cmd);
-        RESULT = t;
+        // Create a new TestNode
+        TestNode testNode = new TestNode(name);
+        // Add all the commands (requests/expects) from the list to the node
+        if (cmds != null) {
+            for (Object cmd : cmds) {
+                testNode.addCommand((TestCommandNode)cmd);
+            }
+        }
+        RESULT = testNode;
     :}
     ;
 
+// Rule for a list of commands (or an empty list)
+test_commands_list ::=
+    test_commands_list:list test_command:cmd
+    {:
+        // Add the new command to the list and return the list
+        list.add(cmd);
+        RESULT = list;
+    :}
+    |
+    /* empty */
+    {:
+        // Return a new, empty list
+        RESULT = new java.util.ArrayList();
+    :}
+    ;
+
+// Rule for a single command
 test_command ::=
     request:r
-    {:
-        RESULT = r;
-    :}
+    {: RESULT = r; :}
     |
-    expect_stmt:e
-    {:
-        RESULT = e;
-    :}
+    assertion:a
+    {: RESULT = a; :}
     ;
 
+// Rule for HTTP requests (POST/GET)
 request ::=
-    POST STRING:url STRING:body SEMI
+    // Rule for: POST "/api/login" { body = "..."; }
+    POST STRING:url LBRACE BODY EQ STRING:body SEMI RBRACE
     {:
         RESULT = new RequestNode("POST", url, body);
     :}
     |
+    // Rule for: GET "/api/users/1";
     GET STRING:url SEMI
     {:
         RESULT = new RequestNode("GET", url, null);
     :}
     |
-    PUT STRING:url STRING:body SEMI
+    // Rule for: PUT "/api/update" { body = "..."; }
+    PUT STRING:url LBRACE BODY EQ STRING:body SEMI RBRACE
     {:
         RESULT = new RequestNode("PUT", url, body);
     :}
     |
+    // Rule for: DELETE "/api/delete/1";
     DELETE STRING:url SEMI
     {:
         RESULT = new RequestNode("DELETE", url, null);
     :}
     ;
 
-expect_stmt ::=
-    EXPECT STATUS EQ NUMBER:statusCode SEMI
+// Rule for assertions (expect)
+assertion ::=
+    // Rule for: expect status = 200;
+    EXPECT STATUS EQ NUMBER:code SEMI
     {:
-        RESULT = new ExpectNode("status", statusCode);
+        RESULT = new ExpectNode("status", code);
     :}
     |
-    EXPECT HEADER STRING:headerName CONTAINS STRING:value SEMI
+    // Rule for: expect body contains "token";
+    EXPECT BODY CONTAINS STRING:content SEMI
     {:
-        RESULT = new ExpectNode("header", headerName, value);
+        RESULT = new ExpectNode("body", "contains", content);
     :}
     |
-    EXPECT BODY CONTAINS STRING:value SEMI
+    // Rule for: expect header "Content-Type" contains "json";
+    EXPECT HEADER STRING:headerName CONTAINS STRING:content SEMI
     {:
-        RESULT = new ExpectNode("body", value);
+        RESULT = new ExpectNode("header", headerName, content);
     :}
     ;
 
