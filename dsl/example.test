@@ -3,6 +3,7 @@ config {
 }
 
 let user = "admin";
+let user_id = 42;
 
 test Login {
     post "/api/login" {
@@ -12,4 +13,12 @@ test Login {
     expect status = 200;
     expect header "Content-Type" contains "json";
     expect body contains "\"token\":";
+}
+
+test GetUser {
+  get "/api/users/$user_id";
+  expect status = 200;
+  expect header "Content-Type" contains "json";
+  expect body contains "\"username\":\"admin\"";
+  expect body contains "\"id\":42";
 }
