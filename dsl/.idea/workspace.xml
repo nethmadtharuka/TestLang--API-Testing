@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afedbc7d-f11a-4911-ab5f-3f581a25f7bd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/cup/parser.cup" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cup/parser.cup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/jflex/lexer.l" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/jflex/lexer.l" afterDir="false" />
-    </list>
+    <list default="true" id="afedbc7d-f11a-4911-ab5f-3f581a25f7bd" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,12 +24,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.DSL.executor": "Run",
-    "JUnit.GeneratedTests.executor": "Run",
+    "JUnit.GeneratedTests.executor": "Debug",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dulain",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "E:/Projects/PP Project/TestLangPlusPlus/dsl",
     "project.structure.last.edited": "Modules",
@@ -40,19 +36,17 @@
     "project.structure.side.proportion": "0.0"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.GeneratedTests">
+  <component name="RunManager" selected="Application.DSL">
     <configuration name="DSL" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.testlang.TestLangProcessor" />
-      <module name="dsl" />
       <option name="PROGRAM_PARAMETERS" value="example.test" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="GeneratedTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="dsl" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.testlang.*" />
@@ -61,6 +55,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.testlang" />
       <option name="MAIN_CLASS_NAME" value="com.testlang.GeneratedTests" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
